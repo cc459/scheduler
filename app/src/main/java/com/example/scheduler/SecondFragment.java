@@ -9,11 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.scheduler.databinding.FragmentSecondBinding;
+import com.example.scheduler.databinding.NewEventBinding;
+import com.example.scheduler.databinding.NewEventBinding;
 
 public class SecondFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private NewEventBinding binding;
 
     @Override
     public View onCreateView(
@@ -21,7 +22,7 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = NewEventBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -29,8 +30,8 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
+        binding.saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override // current action: navigate from new_event to fragment_first
             public void onClick(View view) {
                 NavHostFragment.findNavController(SecondFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
