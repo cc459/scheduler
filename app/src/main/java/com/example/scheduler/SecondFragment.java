@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.scheduler.databinding.NewEventBinding;
-import com.example.scheduler.databinding.NewEventBinding;
 
 public class SecondFragment extends Fragment {
 
