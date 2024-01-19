@@ -11,9 +11,16 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.scheduler.databinding.FragmentFirstBinding;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+    //Hashmap storing all events
+    private HashMap<Date, List<String>> schedule = new HashMap<>();
 
     @Override
     public View onCreateView(
@@ -37,6 +44,23 @@ public class FirstFragment extends Fragment {
             }
         });*/
     }
+
+    //orders and displays all events, including new entered ones from the user, in list form
+    public void orderEvent(Date date, String eventName) {
+        //if list doesn't contain event with specified date
+        if (!schedule.containsKey(date)){
+            List<String> events = new ArrayList<String>();
+            events.add(eventName);
+            schedule.put(date, events);
+        }
+        //if list contains another event with same date
+        else {
+            List<String> events = schedule.get(date);
+            events.add(eventName);
+        }
+    }
+
+    
 
     @Override
     public void onDestroyView() {
