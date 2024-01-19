@@ -20,7 +20,7 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     //Hashmap storing all events
-    private HashMap<Date, List<String>> schedule = new HashMap<>();
+    public static HashMap<Date, List<String>> schedule = new HashMap<>();
 
     @Override
     public View onCreateView(
@@ -46,7 +46,7 @@ public class FirstFragment extends Fragment {
     }
 
     //orders and displays all events, including new entered ones from the user, in list form
-    public void orderEvent(Date date, String eventName) {
+    public static void orderEvent(Date date, String eventName) {
         //if list doesn't contain event with specified date
         if (!schedule.containsKey(date)){
             List<String> events = new ArrayList<String>();
@@ -60,7 +60,7 @@ public class FirstFragment extends Fragment {
         }
     }
 
-    
+
 
     @Override
     public void onDestroyView() {
