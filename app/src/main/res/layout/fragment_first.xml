@@ -6,16 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
-
-    <EditText
-        android:id="@+id/editTextTextMultiLine"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:text="Click purple plus button at bottom right to create new event!"
-        android:textSize="24sp"
-        android:textAlignment="center"/>
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:text="" />
+
 
 
 </androidx.core.widget.NestedScrollView>
