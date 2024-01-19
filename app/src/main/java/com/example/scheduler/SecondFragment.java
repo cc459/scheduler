@@ -1,6 +1,5 @@
 package com.example.scheduler;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -15,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.scheduler.databinding.NewEventBinding;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,6 +25,8 @@ import java.util.TimeZone;
 public class SecondFragment extends Fragment {
 
     private NewEventBinding binding;
+    private String eventName;
+    private Date eventDate;
 
     @Override
     public View onCreateView(
@@ -43,17 +45,31 @@ public class SecondFragment extends Fragment {
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override // current action: navigate from new_event to fragment_first
             public void onClick(View view) {
-                String eventName = binding.eventLabel.getEditText().getText().toString();
+
+                eventName = binding.eventLabel.getEditText().getText().toString();
                 Log.v("EditText", eventName);
 
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                if (eventName.isEmpty() || eventDate == null) {
+                    if (eventName.isEmpty()) {
+                        Log.v("Empty Label", "Event name is empty.");
+                    }
+                    if (eventDate == null) {
+                        Log.v("Empty Label", "Event date is empty.");
+                    }
+                    Snackbar.make(view, "Please do not leave any fields empty!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null)
+                            .show();
+                } else {
+                    Event event = new Event(eventName, eventDate);
+                    FirstFragment.orderEvent(event.getEventDate(), event.getEventName());
+
+                    NavHostFragment.findNavController(SecondFragment.this)
+                            .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                }
+
             }
         });
 
-//        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-//        materialDateBuilder.setTitleText("SELECT A DATE");
-//        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select date")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
@@ -70,20 +86,17 @@ public class SecondFragment extends Fragment {
                 new MaterialPickerOnPositiveButtonClickListener<Long>() {
                     @Override
                     public void onPositiveButtonClick(Long selection) {
-                        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("EST"));
-//                        calendar.setTimeInMillis(selection);
-//                        Date date = calendar.getTime();
-//                        Log.v("DatePicker", DateFormat.format("dd/MM/yyyy", new Date(selection)).toString());
-//                        Log.v("TimeInMillis", calendar.getTime().toString());
-
+                        // create calendar
+                        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                         TimeZone timeZoneUTC = TimeZone.getDefault();
                         int offsetFromUTC = timeZoneUTC.getOffset(new Date().getTime()) * -1;
                         SimpleDateFormat simpleFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-//                        Date offset_date = new Date(selection + offsetFromUTC);
+                        // set date with offset
                         calendar.setTimeInMillis(selection + offsetFromUTC);
-                        Date date = calendar.getTime();
-                        Log.v("DatePickerWithOffset", date.toString());
-                        binding.selectDate.getEditText().setText(simpleFormat.format(date));
+                        eventDate = calendar.getTime();
+                        Log.v("DatePickerWithOffset", eventDate.toString());
+                        // show selection in edittext field
+                        binding.selectDate.getEditText().setText(simpleFormat.format(eventDate));
                     }
                 });
 
