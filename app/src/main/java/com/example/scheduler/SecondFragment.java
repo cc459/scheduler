@@ -2,6 +2,8 @@ package com.example.scheduler;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.scheduler.databinding.NewEventBinding;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class SecondFragment extends Fragment {
 
@@ -35,6 +43,9 @@ public class SecondFragment extends Fragment {
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override // current action: navigate from new_event to fragment_first
             public void onClick(View view) {
+                String eventName = binding.eventLabel.getEditText().getText().toString();
+                Log.v("EditText", eventName);
+
                 NavHostFragment.findNavController(SecondFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
@@ -56,15 +67,25 @@ public class SecondFragment extends Fragment {
         });
 
         datePicker.addOnPositiveButtonClickListener(
-                new MaterialPickerOnPositiveButtonClickListener() {
-                    @SuppressLint("SetTextI18n")
+                new MaterialPickerOnPositiveButtonClickListener<Long>() {
                     @Override
-                    public void onPositiveButtonClick(Object selection) {
-                        binding.selectDate.getEditText().setText(datePicker.getHeaderText());
+                    public void onPositiveButtonClick(Long selection) {
+                        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+//                        calendar.setTimeInMillis(selection);
+//                        Date date = calendar.getTime();
+//                        Log.v("DatePicker", DateFormat.format("dd/MM/yyyy", new Date(selection)).toString());
+//                        Log.v("TimeInMillis", calendar.getTime().toString());
+
+                        TimeZone timeZoneUTC = TimeZone.getDefault();
+                        int offsetFromUTC = timeZoneUTC.getOffset(new Date().getTime()) * -1;
+                        SimpleDateFormat simpleFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+//                        Date offset_date = new Date(selection + offsetFromUTC);
+                        calendar.setTimeInMillis(selection + offsetFromUTC);
+                        Date date = calendar.getTime();
+                        Log.v("DatePickerWithOffset", date.toString());
+                        binding.selectDate.getEditText().setText(simpleFormat.format(date));
                     }
                 });
-
-
 
 
 
