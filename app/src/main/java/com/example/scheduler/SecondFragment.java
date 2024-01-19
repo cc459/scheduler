@@ -1,5 +1,6 @@
 package com.example.scheduler;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.scheduler.databinding.NewEventBinding;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 public class SecondFragment extends Fragment {
 
@@ -36,7 +39,38 @@ public class SecondFragment extends Fragment {
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
+
+//        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+//        materialDateBuilder.setTitleText("SELECT A DATE");
+//        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build();
+
+        binding.selectDate.setStartIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePicker.show(getActivity().getSupportFragmentManager(), "icon_date_picker");
+            }
+        });
+
+        datePicker.addOnPositiveButtonClickListener(
+                new MaterialPickerOnPositiveButtonClickListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onPositiveButtonClick(Object selection) {
+                        binding.selectDate.getEditText().setText(datePicker.getHeaderText());
+                    }
+                });
+
+
+
+
+
     }
+
+
 
     @Override
     public void onDestroyView() {
